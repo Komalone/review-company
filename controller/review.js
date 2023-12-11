@@ -19,14 +19,28 @@ console.log(companyName, pros, cons, starRating);
 
 }
 
-exports.getReview= async(req, res)=>{
-    const company= req.params.company;
-    console.log("this is param",company)
-try{
-    const data= await Review.findAll({where: {companyName: company}});
-    console.log("get data",data);
-    res.status(200).json({reviewDetail: data, "message": "get company"});
-}catch(err){
-    console.log(err);
-}
-}
+exports.getReview = async(req, res) => {
+    const company = req.params.company;
+    console.log("this is param", company);
+
+    try {
+        const reviews = await Review.findAll({ where: { companyName: company } });
+        console.log("get data", reviews);
+
+        // Calculate the average star rating
+        let totalRating = 0;
+        reviews.forEach(review => {
+            totalRating += review.starRating;
+        });
+        const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+
+        res.status(200).json({
+            reviewDetail: reviews,
+            averageRating: averageRating,
+            message: "get company"
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "An error occurred" });
+    }
+};

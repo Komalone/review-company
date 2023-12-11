@@ -99,16 +99,20 @@
         });
         const result = await response.json();
         const data= result.reviewDetail;
-        console.log(result.reviewDetail);
+        console.log(data[0].companyName);
 
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = ''; // Clear previous results
-
+        console.log(result.averageRating);
             if (data && data.length > 0) {
+                const heading= data[0].companyName;
+                const companyh2 = document.createElement('h2');
+                companyh2.innerHTML=`Company Name: <h3>${heading}</h3>
+                Average Rating: <h4>${result.averageRating}</h4>`
+                resultsDiv.appendChild(companyh2);
                 data.forEach(company => {
                     const companyDiv = document.createElement('div');
-                    companyDiv.innerHTML = `
-                        <h3>${company.companyName}</h3>
+                    companyDiv.innerHTML = `    
                         <p>Pros: ${company.pros}</p>
                         <p>Cons: ${company.cons}</p>
                         <div class="rating">${renderStars(company.starRating)}</div>
